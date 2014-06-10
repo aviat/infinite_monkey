@@ -20,7 +20,7 @@ class Monkey(Thread):
         new = self.generate()
         while new != self.word and not stop:
             new = self.generate()
-        if new == word:
+        if new == self.word:
             print "%s has found: %s" % (self.name, new)
             stop = True
 
@@ -34,11 +34,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--threads', type=int, default=1)
     args = parser.parse_args()
 
-    word = args.word
-    range_word = range(len(word))
-    threads_count = args.threads
-
-    threads = [Monkey(x+1, word, string.lowercase) for x in range(threads_count)]
+    threads = [Monkey(x+1, args.word, string.lowercase) for x in range(args.threads)]
     begin = time.time()
     for t in threads:
         t.setDaemon(True)
