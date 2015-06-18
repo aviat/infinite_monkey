@@ -3,6 +3,7 @@ import string
 import time
 import argparse
 from threading import Thread
+import functools
 
 stop = False
 
@@ -17,15 +18,18 @@ class Monkey(Thread):
 
     def run(self):
         global stop
-        new = self.generate()
-        while new != self.word and not stop:
-            new = self.generate()
-        if new == self.word:
+        word = self.word
+        range_word = self.range_word
+        choice = functools.partial(random.choice, self.letters)
+        join = ''.join
+
+        new = None
+        while new != word and not stop:
+            new = join([choice() for x in range_word])
+
+        if new == word:
             print "%s has found: %s" % (self.name, new)
             stop = True
-
-    def generate(self):
-        return ''.join([random.choice(self.letters) for x in self.range_word])
 
 
 if __name__ == '__main__':
